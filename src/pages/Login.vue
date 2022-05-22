@@ -1,48 +1,67 @@
 <template>
-  <div>
-    <el-button type="text" @click="open">点击打开 Message Box</el-button>
+  <div id="login">
+    <h4>用户名</h4>
+    <el-input v-model="username" placeholder="用户名"></el-input>
+    <p class="error">当前用户名已注册</p>
+    <h4>密码</h4>
+    <el-input v-model="password" type="password" placeholder="密码"></el-input>
+    <p class="error">当前用户名已注册</p>
+    <el-button size="medium">立即登录</el-button>
+    <p class="notice">
+      没有账号？<router-link to="/register">注册新用户</router-link>
+    </p>
   </div>
 </template>
 
 <script>
-import request from "../helper/request";
-import auth from "../api/auth";
-import blog from "../api/blog";
-
-window.request = request;
-window.auth = auth;
-window.blog = blog;
-
 export default {
-  methods: {
-    open() {
-      this.$prompt("请输入邮箱", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消"
-        // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-        // inputErrorMessage: "邮箱格式不正确"
-      })
-        .then(({ value }) => {
-          alert(value);
-
-          this.$message({
-            type: "success",
-            message: "你的邮箱是: " + value
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "取消输入"
-          });
-        });
-    }
+  data() {
+    return {
+      msg: "Welcome to Your Vue.js App"
+    };
   }
 };
 </script>
 
 <style lang="less" scoped>
-span {
-  color: red;
+@import "../assets/base.less";
+
+#login {
+  display: grid;
+  justify-content: center;
+  padding-top: 30px;
+
+  h4 {
+    margin: 10px 0 5px;
+  }
+
+  p {
+    margin: 5px 0;
+  }
+
+  input {
+    width: 400px;
+  }
+
+  .error {
+    font-size: 12px;
+    color: #3f463c;
+  }
+
+  button {
+    margin-top: 10px;
+    justify-self: start;
+  }
+
+  .notice {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 30px;
+    color: #3f463c;
+
+    a {
+      color: @themeColor;
+    }
+  }
 }
 </style>

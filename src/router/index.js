@@ -16,8 +16,8 @@ const routes = [
   {
     // 设置默认路径
     path: "/",
-    // （以新的方式或目的）重新使用
-    redirect: "/login"
+    // Index为首页
+    component: Index
   },
   {
     path: "/login",
