@@ -1,3 +1,5 @@
+import blog from "../../api/blog";
+
 const states = {};
 const getters = {};
 const mutations = {};

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// 反馈:在活动后显示反馈 与Notification的不同之处在于后者通常用于显示系统级被动通知。
+// 在活动后显示反馈 与Notification的不同之处在于后者通常用于显示系统级被动通知。
 import { Message } from "element-ui";
 
 // 全局axios默认值，即将被发送的自定义post请求头
@@ -18,6 +18,7 @@ export default function request(url, type = "GET", data = {}) {
       method: type
     };
     if (type.toLowerCase() === "get") {
+      // 如果是get请求
       option.params = data;
     } else {
       option.data = data;
@@ -35,6 +36,7 @@ export default function request(url, type = "GET", data = {}) {
           if (res.data.token) {
             localStorage.token = res.data.token;
           }
+          // 如果任务成功完成并带有结果值
           resolve(res.data);
         } else {
           Message.error(res.data.msg);

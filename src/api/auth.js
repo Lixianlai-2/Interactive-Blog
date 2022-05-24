@@ -12,6 +12,7 @@ export default {
     return request(URL.REGISTER, "POST", { username, password });
   },
 
+  // 如果登录成功
   login({ username, password }) {
     return request(URL.LOGIN, "POST", { username, password });
   },
