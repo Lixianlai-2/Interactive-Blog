@@ -1,5 +1,4 @@
 // auth是有几种方法的一个对象
-import { cp } from "shelljs";
 import auth from "../../api/auth";
 
 const state = {

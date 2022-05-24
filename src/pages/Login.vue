@@ -1,12 +1,15 @@
 <template>
   <div id="login">
     <h4>用户名</h4>
-    <el-input v-model="username" placeholder="用户名"></el-input>
-    <p class="error">当前用户名已注册</p>
+    <input placeholder="用户名" v-model="username" />
     <h4>密码</h4>
-    <el-input v-model="password" type="password" placeholder="密码"></el-input>
-    <p class="error">当前用户名已注册</p>
-    <el-button size="medium">立即登录</el-button>
+    <input
+      type="password"
+      placeholder="密码"
+      v-model="password"
+      @keydown.enter="onLogin"
+    />
+    <el-button size="medium" @click="onLogin">立即登录</el-button>
     <p class="notice">
       没有账号？<router-link to="/register">注册新用户</router-link>
     </p>
@@ -14,11 +17,25 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   data() {
     return {
-      msg: "Welcome to Your Vue.js App"
+      username: "",
+      password: ""
     };
+  },
+  methods: {
+    ...mapActions(["login"]),
+    onLogin() {
+      this.login({ username: this.username, password: this.password }).then(
+        () => {
+          // 跳转到首页（Index页面）
+          this.$router.push({ path: "/" });
+        }
+      );
+    }
   }
 };
 </script>
@@ -49,7 +66,7 @@ export default {
   }
 
   button {
-    margin-top: 10px;
+    margin-top: 30px;
     justify-self: start;
   }
 
@@ -63,5 +80,13 @@ export default {
       color: @themeColor;
     }
   }
+}
+
+input {
+  line-height: 40px;
+  border: 1px solid #eaeaea;
+  padding: 0 10px;
+  border-radius: 4px;
+  outline: none;
 }
 </style>

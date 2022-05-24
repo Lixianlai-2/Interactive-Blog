@@ -68,7 +68,6 @@ body {
     #Footer {
       padding-left: 20px;
       padding-right: 20px;
-      // border: 10px solid red;
     }
   }
 }
