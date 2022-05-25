@@ -59,11 +59,13 @@ export default {
   }
 
   button {
-    margin-top: 10px;
+    margin-top: 30px;
     justify-self: start;
   }
 
   .notice {
+    justify-content: center;
+    display: flex;
     font-size: 12px;
     color: #3f463c;
     text-align: center;

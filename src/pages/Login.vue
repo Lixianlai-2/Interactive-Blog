@@ -71,6 +71,8 @@ export default {
   }
 
   .notice {
+    justify-content: center;
+    display: flex;
     font-size: 12px;
     text-align: center;
     margin-top: 30px;
