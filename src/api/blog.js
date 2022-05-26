@@ -44,7 +44,7 @@ export default {
   },
 
   createBlog(
-    // atIndex默认不展示在首页
+    // atIndex决定是否展示在首页
     { title = "", content = "", description = "", atIndex = false } = {
       title: "",
       content: "",

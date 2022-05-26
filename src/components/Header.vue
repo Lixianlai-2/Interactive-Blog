@@ -1,10 +1,10 @@
 <template>
   <!-- 根据是登出还是登入，展示不同的页面 -->
   <header :class="{ login: isLogin, logout: !isLogin }">
-    <!-- {{ `这是isLogin:` + isLogin }} -->
     <!-- 没有登录 -->
     <template v-if="!isLogin">
       <h1>先来写博客</h1>
+
       <p>记录学习的点点滴滴，分享总结的经验和踩过的坑</p>
       <div class="buttons">
         <router-link to="/login"> <el-button>立即登录</el-button></router-link>
@@ -16,6 +16,8 @@
     <!-- 登录后header展示的页面 -->
     <template v-if="isLogin">
       <h1>开始写博客吧！</h1>
+      <!-- 导向createPage的图标 -->
+      <router-link to="/createPage"> <i class="el-icon-edit"></i></router-link>
       <div class="user">
         <img
           class="avatar"
@@ -69,6 +71,16 @@ header.login {
   display: flex;
   align-items: center;
   background: #3f463c;
+
+  .el-icon-edit {
+    color: #eaeaea93;
+    font-size: 25px;
+    margin-right: 20px;
+  }
+
+  .el-icon-edit:hover {
+    color: #eaeaea;
+  }
 
   h1 {
     margin: 0;

@@ -1,43 +1,87 @@
 <template>
   <div id="index">
     <section class="blog-posts">
-      <div class="item">
+      <router-link
+        class="item"
+        v-for="blog in blogs"
+        :key="blog.id"
+        :to="`/detail/${blog.id}`"
+      >
         <figure class="avatar">
-          <img
-            src="https://i.ibb.co/xC2rYPm/image.png"
-            alt="image"
-            border="0"
-          />
-          <figcaption>李先来</figcaption>
+          <!-- 用后台传来的数据替换原来设置的固定内容 -->
+          <img :src="blog.user.avatar" :alt="blog.user.username" border="0" />
+          <figcaption>{{ blog.user.username }}</figcaption>
         </figure>
-        <h3>Vue计算属性 <span>2天前</span></h3>
+        <h3>
+          {{ blog.title }} <span>{{ blog.createdAt }}</span>
+        </h3>
         <p>
-          本文要涉及的概念有，用插值语法实现简单输入，如何让input里面的值动态变化，并对让Vue对页面进行重新渲染，get()的作用，怎么读取computed中的内容？怎么在控制台区分计算属性跟普通属性...
+          {{ blog.description }}
         </p>
-      </div>
-      <div class="item">
-        <figure class="avatar">
-          <img
-            src="https://i.ibb.co/xC2rYPm/image.png"
-            alt="image"
-            border="0"
-          />
-          <figcaption>李先来</figcaption>
-        </figure>
-        <h3>Vue监视属性 <span>3天前</span></h3>
-        <p>
-          监视有哪两种写法，计算属性是怎么实现的，watch内置一个handler函数，watch还有什么配置呢...
-        </p>
-      </div>
+      </router-link>
+    </section>
+
+    <section class="pagination">
+      <!-- 引入分页组件 -->
+      <el-pagination
+        layout="prev, pager, next"
+        :total="totalArticle"
+        :page="currentPage"
+        @current-change="onPageChange"
+      >
+      </el-pagination>
     </section>
   </div>
 </template>
 
 <script>
+import blog from "../api/blog";
+
 export default {
   name: "index",
   data() {
-    return {};
+    return {
+      // 用来存放从后台获取的首页博客数据
+      blogs: [],
+      // page代表当前的页数
+      currentPage: 1,
+      // total代表每页的文章数量
+      totalArticle: 0
+    };
+  },
+  created() {
+    blog.getIndexBlogs().then(res => {
+      this.blogs = res.data;
+      this.totalArticle = res.total;
+      this.currentPage = res.page;
+    });
+  },
+  methods: {
+    onPageChange(nowPage) {
+      console.log(nowPage);
+      blog
+        // 得到当前所在页的数据
+        .getIndexBlogs({ page: nowPage })
+        .then(res => {
+          this.blogs = res.data;
+          this.totalArticle = res.total;
+          this.currentPage = res.page;
+          // 进入Index页面，查询参数变成当前所在页
+          this.$router.push({ path: "/", query: { page: nowPage } });
+        })
+        .then(() => {
+          // 当点击新的分页后，自动滚动到顶部
+          const scrollToTop = () => {
+            let sTop =
+              document.documentElement.scrollTop || document.body.scrollTop;
+            if (sTop > 0) {
+              window.requestAnimationFrame(scrollToTop);
+              window.scrollTo(0, sTop - sTop / 8);
+            }
+          };
+          scrollToTop();
+        });
+    }
   }
 };
 </script>
