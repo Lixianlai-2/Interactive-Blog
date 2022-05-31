@@ -13,9 +13,10 @@
         >
       </div>
     </template>
+
     <!-- 登录后header展示的页面 -->
     <template v-if="isLogin">
-      <h1>开始写博客吧！</h1>
+      <h1><router-link class="share" to="/">分享使人进步</router-link></h1>
       <!-- 导向createPage的图标 -->
       <router-link to="/createPage"> <i class="el-icon-edit"></i></router-link>
       <div class="user">
@@ -74,7 +75,7 @@ header.login {
 
   .el-icon-edit {
     color: #eaeaea93;
-    font-size: 25px;
+    font-size: 35px;
     margin-right: 20px;
   }
 
@@ -88,10 +89,18 @@ header.login {
     font-size: 30px;
     text-transform: uppercase;
     flex: 1;
-    color: rgba(255, 255, 255, 0.747);
+    // color: rgba(255, 255, 255, 0.747);
 
     a {
       color: #fff;
+    }
+
+    .share {
+      color: #eaeaea8e;
+    }
+
+    .share:hover {
+      color: #eaeaeae3;
     }
   }
 

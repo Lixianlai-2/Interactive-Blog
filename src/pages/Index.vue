@@ -13,7 +13,7 @@
           <figcaption>{{ blog.user.username }}</figcaption>
         </figure>
         <h3>
-          {{ blog.title }} <span>{{ blog.createdAt }}</span>
+          {{ blog.title }} <span>{{ friendlyDate(blog.createdAt) }}</span>
         </h3>
         <p>
           {{ blog.description }}
@@ -50,7 +50,8 @@ export default {
     };
   },
   created() {
-    blog.getIndexBlogs().then(res => {
+    this.currentPage = parseInt(this.$route.query.page) || 1;
+    blog.getIndexBlogs({ page: this.currentPage }).then(res => {
       this.blogs = res.data;
       this.totalArticle = res.total;
       this.currentPage = res.page;
@@ -58,7 +59,6 @@ export default {
   },
   methods: {
     onPageChange(nowPage) {
-      console.log(nowPage);
       blog
         // 得到当前所在页的数据
         .getIndexBlogs({ page: nowPage })
@@ -120,5 +120,10 @@ export default {
       font-weight: normal;
     }
   }
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
 }
 </style>

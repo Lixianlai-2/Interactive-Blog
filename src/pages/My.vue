@@ -1,56 +1,114 @@
 <template>
   <div id="my">
     <section class="user-info">
-      <img src="https://i.ibb.co/xC2rYPm/image.png" alt="image" border="0" />
-      <h3>李先来</h3>
+      <img :src="user.avatar" :alt="user.username" />
+      <h3>{{ user.username }}</h3>
     </section>
     <section>
-      <div class="item">
+      <router-link
+        class="item"
+        v-for="blog in this.blogs"
+        :key="blog.id"
+        :to="`/detail/${blog.id}`"
+      >
         <div class="date">
-          <span class="day">20</span>
-          <span class="month">5月</span>
-          <span class="year">2018</span>
+          <span class="day">{{ splitDate(blog.createdAt).date }}</span>
+          <span class="month">{{ splitDate(blog.createdAt).month }}月</span>
+          <span class="year">{{ splitDate(blog.createdAt).year }}</span>
         </div>
-        <h3>前端异步解密</h3>
+        <h3>{{ blog.title }}</h3>
         <p>
-          本文以一个简单的文件读写为例，讲解了异步的不同写法，包括 普通的
-          callback、ES2016中的Promise和Generator、 Node 用于解决回调的co
-          模块、ES2017中的async/await。适合初步接触 Node.js以及少量
-          ES6语法的同学阅读...
+          {{ blog.description }}
         </p>
         <div class="actions">
-          <router-link to="/edit">编辑</router-link>
-          <a href="#">删除</a>
+          <router-link :to="`/edit/${blog.id}`">编辑</router-link>
+          <a href="#" @click.prevent="onDelete(blog.id)">删除</a>
         </div>
-      </div>
-
-      <div class="item">
-        <div class="date">
-          <span class="day">20</span>
-          <span class="month">5月</span>
-          <span class="year">2018</span>
-        </div>
-        <h3>前端异步解密</h3>
-        <p>
-          本文以一个简单的文件读写为例，讲解了异步的不同写法，包括 普通的
-          callback、ES2016中的Promise和Generator、 Node 用于解决回调的co
-          模块、ES2017中的async/await。适合初步接触 Node.js以及少量
-          ES6语法的同学阅读...
-        </p>
-        <div class="actions">
-          <router-link to="/edit">编辑</router-link>
-          <a href="#">删除</a>
-        </div>
-      </div>
+      </router-link>
+    </section>
+    <section class="pagination">
+      <!-- 引入分页组件 -->
+      <el-pagination
+        layout="prev, pager, next"
+        :total="total"
+        :current-page="page"
+        @current-change="onPageChange"
+      >
+      </el-pagination>
     </section>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import blog from "../api/blog.js";
+
 export default {
   name: "my",
   data() {
-    return {};
+    return {
+      blogs: [], // 博客文章的信息
+      page: 1, // 分页数
+      total: 0 // 一共有多少文章
+    };
+  },
+
+  computed: {
+    ...mapGetters(["user"])
+  },
+
+  created() {
+    console.log(`this.user@@@`, this.user);
+    this.page = parseInt(this.$route.query.page) || 1;
+    // 得到当前user的相关信息
+    blog.getBLogsByUserId(this.user.id, { page: this.page }).then(res => {
+      this.page = res.page;
+      this.total = res.total;
+      this.blogs = res.data;
+      // if (res.data.length > 0) {
+      //   this.user = res.data[0].user;
+      // }
+    });
+  },
+  methods: {
+    splitDate(dateStr) {
+      let dateObj = typeof dateStr === "object" ? dateStr : new Date(dateStr);
+      return {
+        date: dateObj.getDate(),
+        mouth: dateObj.getMonth() + 1,
+        year: dateObj.getYear()
+      };
+    },
+    onPageChange(nowPage) {
+      blog
+        // 得到当前所在页的数据
+        .getBLogsByUserId(this.user.id, { page: nowPage })
+        .then(res => {
+          this.blogs = res.data;
+          this.total = res.total;
+          this.page = res.page;
+          // 进入Index页面，查询参数变成当前所在页
+          this.$router.push({
+            path: "/my",
+            query: { page: nowPage }
+          });
+        })
+        .then(() => {
+          // 当点击新的分页后，自动滚动到顶部
+          const scrollToTop = () => {
+            let sTop =
+              document.documentElement.scrollTop || document.body.scrollTop;
+            if (sTop > 0) {
+              window.requestAnimationFrame(scrollToTop);
+              window.scrollTo(0, sTop - sTop / 8);
+            }
+          };
+          scrollToTop();
+        });
+    },
+    onDelete(blogId) {
+      blog.deleteBlog({ blogId }).then(res => console.log(res));
+    }
   }
 };
 </script>

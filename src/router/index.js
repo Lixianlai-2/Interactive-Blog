@@ -1,5 +1,5 @@
 import Vue from "vue";
-import VueRouter from "vue-router";
+import Router from "vue-router";
 // import login from "../pages/Login.vue";
 // import createPage from "../pages/CreatePage.vue";
 // import User from "../pages/User.vue";
@@ -11,7 +11,7 @@ import VueRouter from "vue-router";
 // import Detail from "../pages/Detail.vue";
 import store from "../store";
 
-Vue.use(VueRouter);
+Vue.use(Router);
 
 // const routes = [
 //   {
@@ -67,62 +67,55 @@ Vue.use(VueRouter);
 //   }
 // ];
 
-const routes = [
-  {
-    // 设置默认路径
-    path: "/",
-    // Index为首页
-    component: () => import("../pages/Index.vue")
-  },
-  {
-    path: "/login",
-    component: () => import("../pages/Login.vue")
-  },
+const router = new Router({
+  routes: [
+    {
+      // 设置默认路径
+      path: "/",
+      // Index为首页
+      component: () => import("../pages/Index.vue")
+    },
+    {
+      path: "/login",
+      component: () => import("../pages/Login.vue")
+    },
 
-  {
-    path: "/createPage",
-    component: () => import("../pages/CreatePage.vue"),
-    // 只有经过身份验证的用户才能创建帖子
-    meta: { requireAuth: true }
-  },
-  {
-    path: "/user/:blogId",
-    component: () => import("../pages/User.vue")
-  },
-  {
-    path: "/edit/:blogId",
-    component: () => import("../pages/Edit.vue"),
-    // 只有经过身份验证的用户才能编辑帖子
-    meta: { requireAuth: true }
-  },
-  {
-    path: "/my",
-    component: () => import("../pages/My.vue"),
-    // 只有经过身份验证的用户才能访问自己的内容
-    meta: { requireAuth: true }
-  },
-  {
-    path: "/index",
-    component: () => import("../pages/Index.vue")
-  },
+    {
+      path: "/createPage",
+      component: () => import("../pages/CreatePage.vue"),
+      // 只有经过身份验证的用户才能创建帖子
+      meta: { requireAuth: true }
+    },
+    {
+      path: "/user/:blogId",
+      component: () => import("../pages/User.vue")
+    },
+    {
+      path: "/edit/:blogId",
+      component: () => import("../pages/Edit.vue"),
+      // 只有经过身份验证的用户才能编辑帖子
+      meta: { requireAuth: true }
+    },
+    {
+      path: "/my",
+      component: () => import("../pages/My.vue"),
+      // 只有经过身份验证的用户才能访问自己的内容
+      meta: { requireAuth: true }
+    },
+    {
+      path: "/index",
+      component: () => import("../pages/Index.vue")
+    },
 
-  {
-    path: "/register",
-    component: () => import("../pages/Register.vue")
-  },
-  {
-    path: "/detail/:blogId",
-    component: () => import("../pages/Detail.vue")
-  },
-
-  {
-    path: "*",
-    component: () => import("../pages/NotFound.vue")
-  }
-];
-
-const router = new VueRouter({
-  routes
+    {
+      path: "/register",
+      component: () => import("../pages/Register.vue")
+    },
+    {
+      path: "/detail/:blogId",
+      component: () => import("../pages/Detail.vue")
+    }
+  ]
 });
 
 router.beforeEach((to, from, next) => {
