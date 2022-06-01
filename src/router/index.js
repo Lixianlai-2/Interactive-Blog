@@ -121,16 +121,16 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   // 如果matched的标准化路由数组中，有一个标准化路由记录的meta中的requireAuth为真，那么就执行下面的函数
   if (to.matched.some(record => record.meta.requireAuth)) {
-    // 如果用户没有登录
-    if (!store.getters.isLogin) {
-      next({
-        path: "/login",
-        query: { redirect: to.fullPath }
-      });
-    } else {
-      next();
-    }
-    // 如果是不需要登录的，那么直接进行下一步
+    store.dispatch("checkLogin").then(isLogin => {
+      if (!isLogin) {
+        next({
+          path: "/login",
+          query: { redirect: to.fullPath }
+        });
+      } else {
+        next();
+      }
+    });
   } else {
     next(); // 确保一定要调用next()
   }

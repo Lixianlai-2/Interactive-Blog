@@ -28,10 +28,11 @@
     </section>
     <section class="pagination">
       <!-- 引入分页组件 -->
+      <!-- :current-page="page" -->
       <el-pagination
+        small
         layout="prev, pager, next"
         :total="total"
-        :current-page="page"
         @current-change="onPageChange"
       >
       </el-pagination>
@@ -54,7 +55,7 @@ export default {
   },
 
   created() {
-    this.page = this.$route.params.page || 1;
+    this.page = parseInt(this.$route.params.page) || 1;
     this.userId = this.$route.params.userId;
     // 得到当前user的相关信息
     blog.getBLogsByUserId(this.userId, { page: this.page }).then(res => {

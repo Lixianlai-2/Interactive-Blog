@@ -26,7 +26,7 @@
       <el-pagination
         layout="prev, pager, next"
         :total="totalArticle"
-        :page="currentPage"
+        :current-page="currentPage"
         @current-change="onPageChange"
       >
       </el-pagination>

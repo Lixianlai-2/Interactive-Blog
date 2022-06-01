@@ -42,6 +42,7 @@
 <script>
 import { mapGetters } from "vuex";
 import blog from "../api/blog.js";
+import ElementUI from "element-ui";
 
 export default {
   name: "my",
@@ -58,16 +59,12 @@ export default {
   },
 
   created() {
-    console.log(`this.user@@@`, this.user);
     this.page = parseInt(this.$route.query.page) || 1;
     // 得到当前user的相关信息
     blog.getBLogsByUserId(this.user.id, { page: this.page }).then(res => {
       this.page = res.page;
       this.total = res.total;
       this.blogs = res.data;
-      // if (res.data.length > 0) {
-      //   this.user = res.data[0].user;
-      // }
     });
   },
   methods: {
@@ -106,8 +103,21 @@ export default {
           scrollToTop();
         });
     },
-    onDelete(blogId) {
-      blog.deleteBlog({ blogId }).then(res => console.log(res));
+    async onDelete(blogId) {
+      await this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      });
+
+      await blog.deleteBlog({ blogId }); // 删除对应blog
+
+      this.$message({
+        type: "success",
+        message: "删除成功!"
+      });
+      // 删除点击的这篇博客，DOM更新
+      this.blogs = this.blogs.filter(blog => blog.id !== blogId);
     }
   }
 };
