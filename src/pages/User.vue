@@ -1,7 +1,7 @@
 <template>
-  <div id="my">
+  <div id="user">
     <section class="user-info">
-      <img :src="user.avatar" :alt="user.username" />
+      <img :src="user.avatar" :alt="user.username" class="avatar" />
       <h3>{{ user.username }}</h3>
     </section>
     <section>
@@ -17,22 +17,14 @@
           <span class="year">{{ splitDate(blog.createdAt).year }}</span>
         </div>
         <h3>{{ blog.title }}</h3>
-        <p>
-          {{ blog.description }}
-        </p>
-        <div class="actions">
-          <router-link :to="`/edit/${blog.id}`">编辑</router-link>
-          <a href="#">删除</a>
-        </div>
+        <p>{{ blog.description }}</p>
       </router-link>
     </section>
     <section class="pagination">
-      <!-- 引入分页组件 -->
-      <!-- :current-page="page" -->
       <el-pagination
-        small
         layout="prev, pager, next"
         :total="total"
+        :current-page="page"
         @current-change="onPageChange"
       >
       </el-pagination>
@@ -55,10 +47,24 @@ export default {
   },
 
   created() {
-    this.page = parseInt(this.$route.params.page) || 1;
+    // this.userId = this.$route.params.userId;
+    // this.page = parseInt(this.$route.query.page) || 1; //注意是query
+
+    // blog.getBlogsByUserId(this.userId, { page: this.page }).then(res => {
+    //   this.page = res.page;
+    //   this.total = res.total;
+    //   this.blogs = res.data;
+    //   if (res.data.length > 0) {
+    //     this.user = res.data[0].user;
+    //   }
+    // });
+    console.log(`this.$route.params%%%%`, this.$route.params);
     this.userId = this.$route.params.userId;
-    // 得到当前user的相关信息
-    blog.getBLogsByUserId(this.userId, { page: this.page }).then(res => {
+    console.log(`this.userId@@@`, this.userId);
+    console.log(`this.page$$$`, this.page);
+    this.page = this.$route.query.page || 1;
+    blog.getBlogsByUserId(this.userId, { page: this.page }).then(res => {
+      console.log(`user返回的res@@@`, res);
       this.page = res.page;
       this.total = res.total;
       this.blogs = res.data;
@@ -76,34 +82,29 @@ export default {
         year: dateObj.getFullYear() // 注意是getFullYear
       };
     },
-    onPageChange(nowPage) {
-      blog
-        // 得到当前所在页的数据
-        .getBLogsByUserId(this.userId, { page: nowPage })
-        .then(res => {
-          this.blogs = res.data;
-          this.total = res.total;
-          this.page = res.page;
-          // 进入Index页面，查询参数变成当前所在页
-          this.$router.push({
-            path: `/user/${this.userId}`,
-            query: { page: nowPage }
-          });
-        })
-        .then(() => {
-          // 当点击新的分页后，自动滚动到顶部
-          const scrollToTop = () => {
-            let sTop =
-              document.documentElement.scrollTop || document.body.scrollTop;
-            if (sTop > 0) {
-              window.requestAnimationFrame(scrollToTop);
-              window.scrollTo(0, sTop - sTop / 8);
-            }
-          };
-          scrollToTop();
+    onPageChange(newPage) {
+      blog.getBlogsByUserId(this.userId, { page: newPage }).then(res => {
+        this.blogs = res.data;
+        this.total = res.total;
+        this.page = res.page;
+        // 进入Index页面，查询参数变成当前所在页
+        this.$router.push({
+          path: `/user/${this.userId}`,
+          query: { page: newPage }
         });
+      });
     }
-  }
+  }.then(() => {
+    // 当点击新的分页后，自动滚动到顶部
+    const scrollToTop = () => {
+      let sTop = document.documentElement.scrollTop || document.body.scrollTop;
+      if (sTop > 0) {
+        window.requestAnimationFrame(scrollToTop);
+        window.scrollTo(0, sTop - sTop / 8);
+      }
+    };
+    scrollToTop();
+  })
 };
 </script>
 

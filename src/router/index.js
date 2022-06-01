@@ -87,7 +87,7 @@ const router = new Router({
       meta: { requireAuth: true }
     },
     {
-      path: "/user/:blogId",
+      path: "/user/:userId",
       component: () => import("../pages/User.vue")
     },
     {

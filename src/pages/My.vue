@@ -61,7 +61,7 @@ export default {
   created() {
     this.page = parseInt(this.$route.query.page) || 1;
     // 得到当前user的相关信息
-    blog.getBLogsByUserId(this.user.id, { page: this.page }).then(res => {
+    blog.getBlogsByUserId(this.user.id, { page: this.page }).then(res => {
       this.page = res.page;
       this.total = res.total;
       this.blogs = res.data;
@@ -79,7 +79,7 @@ export default {
     onPageChange(nowPage) {
       blog
         // 得到当前所在页的数据
-        .getBLogsByUserId(this.user.id, { page: nowPage })
+        .getBlogsByUserId(this.user.id, { page: nowPage })
         .then(res => {
           this.blogs = res.data;
           this.total = res.total;
