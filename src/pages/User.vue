@@ -45,23 +45,9 @@ export default {
       total: 0 // 一共有多少文章
     };
   },
-
   created() {
-    // this.userId = this.$route.params.userId;
-    // this.page = parseInt(this.$route.query.page) || 1; //注意是query
-
-    // blog.getBlogsByUserId(this.userId, { page: this.page }).then(res => {
-    //   this.page = res.page;
-    //   this.total = res.total;
-    //   this.blogs = res.data;
-    //   if (res.data.length > 0) {
-    //     this.user = res.data[0].user;
-    //   }
-    // });
-    console.log(`this.$route.params%%%%`, this.$route.params);
     this.userId = this.$route.params.userId;
-    console.log(`this.userId@@@`, this.userId);
-    console.log(`this.page$$$`, this.page);
+
     this.page = this.$route.query.page || 1;
     blog.getBlogsByUserId(this.userId, { page: this.page }).then(res => {
       console.log(`user返回的res@@@`, res);
@@ -94,17 +80,7 @@ export default {
         });
       });
     }
-  }.then(() => {
-    // 当点击新的分页后，自动滚动到顶部
-    const scrollToTop = () => {
-      let sTop = document.documentElement.scrollTop || document.body.scrollTop;
-      if (sTop > 0) {
-        window.requestAnimationFrame(scrollToTop);
-        window.scrollTo(0, sTop - sTop / 8);
-      }
-    };
-    scrollToTop();
-  })
+  }
 };
 </script>
 
@@ -134,6 +110,7 @@ export default {
 }
 
 .item {
+  width: 800px;
   display: grid;
   // grid: auto auto auto / 80px 1fr;
   margin: 20px 0;
@@ -147,6 +124,8 @@ export default {
   }
   span {
     display: block;
+    margin-top: 5px;
+    color: #3f463c85;
   }
 
   .day {
